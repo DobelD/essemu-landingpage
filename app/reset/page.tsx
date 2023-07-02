@@ -36,12 +36,12 @@ export default function Home() {
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
             });
-            router.push("/success");
             if (error) {
                 throw new Error(error.message);
             }
 
             setSuccess(true);
+            router.push("/success");
         } catch (error) {
             // setError(error!.message!);
         }
