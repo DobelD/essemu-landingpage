@@ -1,8 +1,7 @@
 "use client"
 import { useState } from 'react';
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation';
 import { createClient } from "@supabase/supabase-js";
-const supabase = createClient("https://yccxlnodtgrnbcfdjqcg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljY3hsbm9kdGdybmJjZmRqcWNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzczMDg1MTgsImV4cCI6MTk5Mjg4NDUxOH0.-NHr0UdUhoSZPOhXfEO6uYiUmsWpuYCXpYQrdzZppbs");
 import {
     Box,
     Text,
@@ -11,14 +10,17 @@ import {
     Alert,
     AlertIcon,
 } from '@chakra-ui/react';
+
+const supabase = createClient("https://yccxlnodtgrnbcfdjqcg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljY3hsbm9kdGdybmJjZmRqcWNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzczMDg1MTgsImV4cCI6MTk5Mjg4NDUxOH0.-NHr0UdUhoSZPOhXfEO6uYiUmsWpuYCXpYQrdzZppbs");
+
 export default function Home() {
-    const { pathname, push } = useRouter();
+    const router = useRouter();
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
-    const handleResetPassword = async () => {
 
+    const handleResetPassword = async () => {
         try {
             if (newPassword === '' || confirmPassword === '') {
                 setError('Password cannot be empty.');
@@ -32,7 +34,6 @@ export default function Home() {
                 setError('Passwords do not match.');
                 return;
             }
-
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
             });
@@ -41,11 +42,12 @@ export default function Home() {
             }
 
             setSuccess(true);
-            push("/success");
+            router.push("/success");
         } catch (error) {
-            // setError(error!.message!);
+            // setError(error.message);
         }
     };
+
     return (
         <>
             <Box
@@ -100,5 +102,5 @@ export default function Home() {
                 </Text>
             </Box>
         </>
-    )
+    );
 }
