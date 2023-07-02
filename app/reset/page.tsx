@@ -1,4 +1,3 @@
-"use client"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from "@supabase/supabase-js";
@@ -9,7 +8,11 @@ import {
     Button,
     Alert,
     AlertIcon,
+    IconButton,
+    InputGroup,
+    InputRightElement,
 } from '@chakra-ui/react';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 const supabase = createClient("https://yccxlnodtgrnbcfdjqcg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljY3hsbm9kdGdybmJjZmRqcWNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzczMDg1MTgsImV4cCI6MTk5Mjg4NDUxOH0.-NHr0UdUhoSZPOhXfEO6uYiUmsWpuYCXpYQrdzZppbs");
 
@@ -19,6 +22,8 @@ export default function Home() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleResetPassword = async () => {
         try {
@@ -34,6 +39,9 @@ export default function Home() {
                 setError('Passwords do not match.');
                 return;
             }
+
+            setIsLoading(true); // Set isLoading to true when the button is clicked
+
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
             });
@@ -45,7 +53,13 @@ export default function Home() {
             router.push("/success");
         } catch (error) {
             // setError(error.message);
+        } finally {
+            setIsLoading(false); // Set isLoading back to false when the operation is complete
         }
+    };
+
+    const handleTogglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -80,22 +94,40 @@ export default function Home() {
                 <Text fontSize="lg" fontWeight="bold" color="blue.500" marginBottom="10px" alignItems="center" justifyContent="center">
                     Reset Passwords
                 </Text>
-                <Input
-                    type="password"
-                    placeholder="New Password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    marginBottom="10px"
-                />
-                <Input
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    marginBottom="20px"
-                />
-                <Button colorScheme="blue" onClick={handleResetPassword} marginBottom="70px">
-                    Reset
+                <InputGroup marginBottom="10px">
+                    <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="New Password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                    <InputRightElement width="3rem">
+                        <IconButton
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                            onClick={handleTogglePasswordVisibility}
+                            variant="unstyled"
+                        />
+                    </InputRightElement>
+                </InputGroup>
+                <InputGroup marginBottom="20px">
+                    <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <InputRightElement width="3rem">
+                        <IconButton
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                            onClick={handleTogglePasswordVisibility}
+                            variant="unstyled"
+                        />
+                    </InputRightElement>
+                </InputGroup>
+                <Button colorScheme="blue" onClick={handleResetPassword} isLoading={isLoading} marginBottom="70px">
+                    {isLoading ? 'Loading...' : 'Reset'}
                 </Button>
                 <Text fontSize="sm" color="gray.500" marginTop="20px" alignItems="center" justifyContent="center">
                     © 2023 Essemu Coffee & Kitchen. All rights reserved.
