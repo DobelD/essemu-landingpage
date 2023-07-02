@@ -6,8 +6,6 @@ const supabase = createClient("https://yccxlnodtgrnbcfdjqcg.supabase.co", "eyJhb
 import Head from 'next/head';
 import {
     Box,
-    Flex,
-    Image,
     Text,
     Input,
     Button,
@@ -15,12 +13,10 @@ import {
     AlertIcon,
 } from '@chakra-ui/react';
 export default function Home() {
-    const doneImage = "https://img.uxwing.com/wp-content/themes/uxwing/download/checkmark-cross/done-icon.svg";
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
-    const router = useRouter();
     const handleResetPassword = async () => {
 
         try {
@@ -40,8 +36,7 @@ export default function Home() {
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
             });
-            router.push("/success");
-
+            useRouter().push("/success");
             if (error) {
                 throw new Error(error.message);
             }
