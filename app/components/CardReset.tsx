@@ -1,13 +1,58 @@
+import { useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from "next/router";
 import {
     Box,
     Flex,
     Image,
-    Text
+    Text,
+    Input,
+    Button,
+    Alert,
+    AlertIcon,
 } from '@chakra-ui/react';
+
+import { createClient } from "@supabase/supabase-js";
+const supabase = createClient("https://yccxlnodtgrnbcfdjqcg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljY3hsbm9kdGdybmJjZmRqcWNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzczMDg1MTgsImV4cCI6MTk5Mjg4NDUxOH0.-NHr0UdUhoSZPOhXfEO6uYiUmsWpuYCXpYQrdzZppbs");
 
 export default function CardReset() {
     const doneImage = "https://img.uxwing.com/wp-content/themes/uxwing/download/checkmark-cross/done-icon.svg";
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
+
+    const handleResetPassword = async () => {
+        const router = useRouter();
+        try {
+            if (newPassword === '' || confirmPassword === '') {
+                setError('Password cannot be empty.');
+                return;
+            }
+            if (newPassword.length < 6) {
+                setError('Password must be at least 6 characters long.');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                setError('Passwords do not match.');
+                return;
+            }
+
+            const { error } = await supabase.auth.updateUser({
+                password: newPassword,
+            });
+            router.push("/success");
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            setSuccess(true);
+        } catch (error) {
+            // setError(error!.message!);
+        }
+    };
+
     return (
         <>
             <Head>
@@ -25,7 +70,6 @@ export default function CardReset() {
                 position="relative"
                 overflow="hidden"
                 textAlign="center"
-
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -38,17 +82,32 @@ export default function CardReset() {
                     ></path>
                 </svg>
 
-                <Flex alignItems="center" marginBottom="20px" justifyContent="center">
-                    <Image src={doneImage} alt="Checklist" width="60px" marginRight="10px" />
-
-                </Flex>
+                {error && (
+                    <Alert status="error" marginBottom="20px">
+                        <AlertIcon />
+                        {error}
+                    </Alert>
+                )}
                 <Text fontSize="lg" fontWeight="bold" color="blue.500" marginBottom="10px" alignItems="center" justifyContent="center">
-                    Success
+                    Reset Password
                 </Text>
-                <Text fontSize="md" color="gray.700" marginBottom="70px" alignItems="center" justifyContent="center">
-                    You have successfully reset your account.
-                </Text>
-
+                <Input
+                    type="password"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    marginBottom="10px"
+                />
+                <Input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    marginBottom="20px"
+                />
+                <Button colorScheme="blue" onClick={handleResetPassword} marginBottom="70px">
+                    Reset
+                </Button>
                 <Text fontSize="sm" color="gray.500" marginTop="20px" alignItems="center" justifyContent="center">
                     © 2023 Essemu Coffee & Kitchen. All rights reserved.
                 </Text>
