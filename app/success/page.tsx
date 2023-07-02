@@ -1,9 +1,9 @@
 "use client"
-import HeroSection from '../components/HeroSection'
+import Success from '../components/Success'
 export default function Home() {
     return (
         <>
-            <HeroSection />
+            <Success />
         </>
     )
 }
