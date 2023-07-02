@@ -12,12 +12,12 @@ import {
     AlertIcon,
 } from '@chakra-ui/react';
 export default function Home() {
+    const { pathname, push } = useRouter();
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const handleResetPassword = async () => {
-        const router = useRouter();
 
         try {
             if (newPassword === '' || confirmPassword === '') {
@@ -41,7 +41,7 @@ export default function Home() {
             }
 
             setSuccess(true);
-            router.push("/success");
+            push("/success");
         } catch (error) {
             // setError(error!.message!);
         }
