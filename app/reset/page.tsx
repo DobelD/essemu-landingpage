@@ -76,7 +76,7 @@ export default function Home() {
                     </Alert>
                 )}
                 <Text fontSize="lg" fontWeight="bold" color="blue.500" marginBottom="10px" alignItems="center" justifyContent="center">
-                    Reset Password
+                    Reset Passwords
                 </Text>
                 <Input
                     type="password"
