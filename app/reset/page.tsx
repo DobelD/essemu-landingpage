@@ -17,6 +17,7 @@ export default function Home() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const handleResetPassword = async () => {
+        const router = useRouter();
 
         try {
             if (newPassword === '' || confirmPassword === '') {
@@ -35,7 +36,7 @@ export default function Home() {
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
             });
-            useRouter().push("/success");
+            router.push("/success");
             if (error) {
                 throw new Error(error.message);
             }
