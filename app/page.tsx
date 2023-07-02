@@ -2,7 +2,7 @@
 export default function Home() {
   return (
     <>
-      <p>Essemu Coffe & Kitchen</p>
+      <p>Essemu Coffe & Kitchens</p>
     </>
   )
 }
