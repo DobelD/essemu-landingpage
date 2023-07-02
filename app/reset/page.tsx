@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useRouter } from "next/router";
 import { createClient } from "@supabase/supabase-js";
 const supabase = createClient("https://yccxlnodtgrnbcfdjqcg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljY3hsbm9kdGdybmJjZmRqcWNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzczMDg1MTgsImV4cCI6MTk5Mjg4NDUxOH0.-NHr0UdUhoSZPOhXfEO6uYiUmsWpuYCXpYQrdzZppbs");
-import Head from 'next/head';
 import {
     Box,
     Text,
@@ -48,12 +47,6 @@ export default function Home() {
     };
     return (
         <>
-            <Head>
-                <link
-                    href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
-                    rel="stylesheet"
-                />
-            </Head>
             <Box
                 borderRadius="12px"
                 margin={{ base: "20px", md: "120px" }}
