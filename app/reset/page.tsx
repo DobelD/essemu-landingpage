@@ -20,9 +20,9 @@ export default function Home() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
-
+    const router = useRouter();
     const handleResetPassword = async () => {
-        const router = useRouter();
+
         try {
             if (newPassword === '' || confirmPassword === '') {
                 setError('Password cannot be empty.');
